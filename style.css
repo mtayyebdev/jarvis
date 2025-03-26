@@ -7,6 +7,10 @@
   --gray: rgb(48, 48, 48);
 }
 
+html, body {
+  overflow: hidden;
+}
+
 body {
   background-color: black;
   color: white;
@@ -14,9 +18,22 @@ body {
   margin: 20px;
 }
 
-/* .container {
-  gap: 10px;
-} */
+.container {
+  position: relative;
+}
+.center-logo-con{
+  position: absolute;
+  width: 100%;
+  height: 93vh;
+  z-index: -2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.center-logo-con .watch-j{
+  width: 400px;
+}
+
 .chatting-con {
   display: flex;
   position: relative;
@@ -27,6 +44,18 @@ body {
 .chatting-con .left{
   width: 20%;
 }
+.chatting-con .right{
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.chatting-con .right div{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .output{
   margin-top: -40px;
   position: absolute;
@@ -35,13 +64,6 @@ body {
   align-items: center;
   justify-content: center;
   overflow-y: scroll;
-}
-.chatting-con .watch-j{
-  position: absolute;
-  left: 35%;
-  top: -70px;
-  z-index: -2;
-  width: 400px;
 }
 
 .jarvis_speaking{
@@ -52,24 +74,28 @@ body {
   height: 340px;
 }
 
-.bottom-con{
-  margin-top: 160px;
+.output::-webkit-scrollbar {
+  display: none;
 }
+
 .bottom-con,
 .top-con {
   display: flex;
   justify-content: space-between;
 }
 
+
 .input-container {
   width: 100%;
   display: flex;
   position: fixed;
+  left: 0;
   bottom: 40px;
   background: transparent;
   align-items: center;
   justify-content: center;
 }
+
 .input-container div {
   background-color: var(--gray);
   display: flex;
@@ -89,9 +115,6 @@ body {
   width: 100%;
   padding: 8px 15px;
 }
-#inputBox::placeholder {
-  color: white;
-}
 
 #submit {
   padding: 10px 17px;
@@ -100,6 +123,10 @@ body {
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
+}
+
+#inputBox::placeholder {
+  color: gray;
 }
 #submit:hover {
   background-color: rgb(243, 238, 238);

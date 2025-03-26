@@ -9,6 +9,21 @@ const output = document.getElementById("output");
 const submit = document.getElementById("submit");
 const startVoice = document.getElementById("startVoice");
 const jarvis_speaking_img = document.getElementsByClassName("jarvis_speaking");
+let time_div=document.getElementById("time");
+let online_div=document.getElementById("online");
+let battery_div=document.getElementById("battery");
+let date_div=document.getElementById("date");
+
+time_div.innerHTML=new Date().toLocaleString().split(",")[1];
+date_div.innerHTML=new Date().toLocaleString().split(",")[0];
+online_div.innerHTML=window.navigator.onLine;
+
+navigator.getBattery()
+.then((res)=>{
+  console.log(res.level*100);
+  battery_div.innerHTML=`${res.level*100}%`
+})
+
 
 // converting array or string..........................
 function arrayToParagraph(arr) {
