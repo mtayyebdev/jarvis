@@ -1,0 +1,115 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --gray: rgb(48, 48, 48);
+}
+
+body {
+  background-color: black;
+  color: white;
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+/* .container {
+  gap: 10px;
+} */
+.chatting-con {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  width: 100%;
+}
+.chatting-con .right,
+.chatting-con .left{
+  width: 20%;
+}
+.output{
+  margin-top: -40px;
+  position: absolute;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: scroll;
+}
+.chatting-con .watch-j{
+  position: absolute;
+  left: 35%;
+  top: -70px;
+  z-index: -2;
+  width: 400px;
+}
+
+.jarvis_speaking{
+  display: none;
+}
+.output div{
+  width: 60%;
+  height: 340px;
+}
+
+.bottom-con{
+  margin-top: 160px;
+}
+.bottom-con,
+.top-con {
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-container {
+  width: 100%;
+  display: flex;
+  position: fixed;
+  bottom: 40px;
+  background: transparent;
+  align-items: center;
+  justify-content: center;
+}
+.input-container div {
+  background-color: var(--gray);
+  display: flex;
+  align-items: center;
+  width: 60%;
+  overflow: hidden;
+  border-radius: 50px;
+  justify-content: space-between;
+}
+
+#inputBox {
+  background-color: transparent;
+  outline: none;
+  color: white;
+  font-size: 18px;
+  border: none;
+  width: 100%;
+  padding: 8px 15px;
+}
+#inputBox::placeholder {
+  color: white;
+}
+
+#submit {
+  padding: 10px 17px;
+  background-color: white;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#submit:hover {
+  background-color: rgb(243, 238, 238);
+}
+
+.jarvis{
+  width: 250px;
+}
+
+#startVoice{
+  border: none;
+  cursor: pointer;
+}

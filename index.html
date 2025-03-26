@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jarvis</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.2.0/markdown-it.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="top-con">
+        <img src="./images/jarvis man.gif" class="jarvis" alt="jarvis" />
+        <img
+          src="./images/78270fde30bdca8fec52f86bfa7cab0c_w200.webp"
+          class="jarvis_speaking"
+          alt="waves"
+        />
+        <img
+          src="./images/307c73143a955f1e0bf26a41b98a035c_w200.webp"
+          alt="startVoice"
+          id="startVoice"
+        />
+      </div>
+      <div class="chatting-con">
+        <div class="left"></div>
+        <img
+          src="./images/4705530785b66c5fcbdc84fba4315dc4_w200.webp"
+          class="watch-j"
+          alt=""
+        />
+        <div class="output">
+          <div id="output"></div>
+        </div>
+        <div class="right"></div>
+      </div>
+      <div class="bottom-con">
+        <img
+          src="./images/05e352aff29e95b54563b55efa653477_w200.webp"
+          class="magic"
+          alt="magic"
+        />
+      </div>
+      <div class="input-container">
+        <div>
+          <input type="text" id="inputBox" placeholder="Enter Message..." />
+          <button id="submit">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=vfku26ZA"></script>
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>
