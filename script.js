@@ -1,5 +1,5 @@
 import { chatHistory, userData } from "./user_data.js";
-const API_KEY = "AIzaSyChoFmCfdZJk5Ry6QiOgMCy9vJt4vZI_Gs"; // jarvis api.................
+const API_KEY = "AIzaSyAbtRVQySzE1adASkDktpBxDd5zzWI5k5M"; // jarvis api.................
 
 // google ai studio............ api
 const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
@@ -9,20 +9,22 @@ const output = document.getElementById("output");
 const submit = document.getElementById("submit");
 const startVoice = document.getElementById("startVoice");
 const jarvis_speaking_img = document.getElementsByClassName("jarvis_speaking");
-let time_div=document.getElementById("time");
-let online_div=document.getElementById("online");
-let battery_div=document.getElementById("battery");
-let date_div=document.getElementById("date");
+let time_div = document.getElementById("time");
+let online_div = document.getElementById("online");
+let battery_div = document.getElementById("battery");
+let date_div = document.getElementById("date");
 
-time_div.innerHTML=new Date().toLocaleString().split(",")[1];
-date_div.innerHTML=new Date().toLocaleString().split(",")[0];
-online_div.innerHTML=window.navigator.onLine;
 
-navigator.getBattery()
-.then((res)=>{
-  console.log(res.level*100);
-  battery_div.innerHTML=`${res.level*100}%`
-})
+setInterval(() => {
+  time_div.innerHTML = new Date().toLocaleString().split(",")[1];
+  date_div.innerHTML = new Date().toLocaleString().split(",")[0];
+  online_div.innerHTML = window.navigator.onLine;
+
+  navigator.getBattery().then((res) => {
+    console.log(res.level * 100);
+    battery_div.innerHTML = `${res.level * 100}%`;
+  });
+}, 1000);
 
 
 // converting array or string..........................
@@ -53,7 +55,7 @@ startVoice.onclick = () => {
 
   recognition.onresult = function (event) {
     let text = event.results[0][0].transcript;
-    text=text.toLowerCase()
+    text = text.toLowerCase();
     if (text.includes("open facebook")) {
       speakText("opening facebook");
       window.open("https://facebook.com");
