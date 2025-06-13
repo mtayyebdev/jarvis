@@ -4,13 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.2.0/markdown-it.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
     <link rel="stylesheet" href="./style.css" />
     <link rel="stylesheet" href="./responsive.css" />
 
@@ -18,6 +11,251 @@
   </head>
   <body>
     <div class="container">
+      <!-- <span class="dots">
+        <h2>Menu</h2>
+      </span> -->
+      <button class="dropdown-button" id="dropdownBtn">
+        <span>Menu</span>
+        <div class="dropdown-arrow"></div>
+      </button>
+
+      <div class="dropdown-menu" id="dropdownMenu">
+        <div class="dropdown-grid">
+          <a href="#" class="dropdown-item facebook" data-value="facebook">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/facebook.png" alt="Facebook" />
+            </div>
+            <span>Facebook</span>
+          </a>
+
+          <a href="#" class="dropdown-item github" data-value="github">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/github.jpg" alt="GitHub" />
+            </div>
+            <span>GitHub</span>
+          </a>
+
+          <a href="#" class="dropdown-item twitter" data-value="twitter">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/twitter.png" alt="Twitter" />
+            </div>
+            <span>Twitter</span>
+          </a>
+
+          <a href="#" class="dropdown-item linkedin" data-value="linkedin">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/linkedin.png" alt="LinkedIn" />
+            </div>
+            <span>LinkedIn</span>
+          </a>
+
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/telegram.jpeg" alt="telegram" />
+            </div>
+            <span>Telegram</span>
+          </a>
+
+          <a href="#" class="dropdown-item youtube" data-value="youtube">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/youtube.png" alt="YouTube" />
+            </div>
+            <span>YouTube</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/fiverr.png" alt="fiverr" />
+            </div>
+            <span>Fiverr</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/googlebard.jpeg" alt="googlebard" />
+            </div>
+            <span>Gemini</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/chatgpt.png" alt="chatgpt" />
+            </div>
+            <span>Chatgpt</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/grok3.png" alt="grok3" />
+            </div>
+            <span>Grok3</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/deepseek.png" alt="deepseek" />
+            </div>
+            <span>DeepSeek</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/invideo.jpeg" alt="invideo" />
+            </div>
+            <span>Invideo AI</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/unsplash.png" alt="unsplash" />
+            </div>
+            <span>Unsplash</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/pixaby.png" alt="pixaby" />
+            </div>
+            <span>Pixaby</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/iconscout.png" alt="iconscout" />
+            </div>
+            <span>Animated Lotties</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/figma.png" alt="figma" />
+            </div>
+            <span>Figma</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/canva.jpeg" alt="canva" />
+            </div>
+            <span>Canva</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/render.png" alt="render" />
+            </div>
+            <span>Render</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/cloudinary.png" alt="cloudinary" />
+            </div>
+            <span>Cloudinary</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/postman.png" alt="postman" />
+            </div>
+            <span>Postman</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/mongodb.png" alt="mongodb" />
+            </div>
+            <span>MongoDB</span>
+          </a>
+          
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/ezgif.jpeg" alt="ezgif" />
+            </div>
+            <span>MP4 - GIF</span>
+          </a>
+          
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/colorMixer.webp" alt="colorMixer" />
+            </div>
+            <span>Color Mixer</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/fontawsome.png" alt="fontawsome" />
+            </div>
+            <span>Font Awsome</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img
+                src="/images/icons img/fontawsomecdn.png"
+                alt="fontawsomecdn"
+              />
+            </div>
+            <span>Font Awsome CDN</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/bootstrap.png" alt="bootstrap" />
+            </div>
+            <span>Bootstrap</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/tailwind.jpg" alt="tailwind" />
+            </div>
+            <span>Tailwind</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/flowbite.jpg" alt="flowbite" />
+            </div>
+            <span>Flowbite</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/shadcn_ui.jpeg" alt="shadcn_ui" />
+            </div>
+            <span>Shadcn UI</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/acertinity.png" alt="acertinity" />
+            </div>
+            <span>Acertinity UI</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/swiper.png" alt="swiper" />
+            </div>
+            <span>Swiper</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/tailblocks.png" alt="tailblocks" />
+            </div>
+            <span>Tailblocks</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/taigrids.png" alt="taigrids" />
+            </div>
+            <span>Taigrids</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/graygrids.jfif" alt="graygrids" />
+            </div>
+            <span>Gray Grids</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/themewagon.png" alt="themewagon" />
+            </div>
+            <span>Theme Wagon</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/creative.png" alt="Theme Wagon" />
+            </div>
+            <span>Creative Tim</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon-wrapper">
+              <img src="/images/icons img/electrosmm.png" alt="electrosmm" />
+            </div>
+            <span>Electro SMM</span>
+          </a>
+        </div>
+      </div>
+
       <div class="center-logo-con">
         <img
           src="./images/4705530785b66c5fcbdc84fba4315dc4_w200.webp"
@@ -29,7 +267,7 @@
         <img src="./images/jarvis man.gif" class="jarvis" alt="jarvis" />
         <img
           src="./images/78270fde30bdca8fec52f86bfa7cab0c_w200.webp"
-          class="jarvis_speaking"
+          id="jarvis_speaking"
           alt="waves"
         />
         <img
@@ -58,7 +296,7 @@
           </div>
           <div class="battery">
             <h3>Battery:</h3>
-            <h3  id="battery"></h3>
+            <h3 id="battery"></h3>
           </div>
         </div>
       </div>

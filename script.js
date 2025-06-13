@@ -8,12 +8,11 @@ const input = document.getElementById("inputBox");
 const output = document.getElementById("output");
 const submit = document.getElementById("submit");
 const startVoice = document.getElementById("startVoice");
-const jarvis_speaking_img = document.getElementsByClassName("jarvis_speaking");
+const jarvis_speaking_img = document.getElementById("jarvis_speaking");
 let time_div = document.getElementById("time");
 let online_div = document.getElementById("online");
 let battery_div = document.getElementById("battery");
 let date_div = document.getElementById("date");
-
 
 setInterval(() => {
   time_div.innerHTML = new Date().toLocaleString().split(",")[1];
@@ -25,7 +24,6 @@ setInterval(() => {
     battery_div.innerHTML = `${res.level * 100}%`;
   });
 }, 1000);
-
 
 // converting array or string..........................
 function arrayToParagraph(arr) {
@@ -40,7 +38,12 @@ function arrayToParagraph(arr) {
 
 function speakText(text) {
   let newText = arrayToParagraph(text);
-  responsiveVoice.speak(newText, "Hindi Male", { rate: 1, pitch: 1 });
+  responsiveVoice.speak(newText, "Hindi Male", {
+    pitch: 1,
+    rate: 1,
+    onstart: () => (jarvis_speaking_img.style.display = "block"),
+    onend: () => (jarvis_speaking_img.style.display = "none"),
+  });
 }
 
 startVoice.onclick = () => {
@@ -129,6 +132,7 @@ async function StartJarvis(value) {
       output.innerHTML = outputText;
       let para = arrayToParagraph(outputText);
       chatHistory.push({ user: value, jarvis: para });
+
       speakText(outputText);
     } else {
       output.innerHTML = "⚠️ No response received. Try again!";
@@ -149,3 +153,94 @@ submit.onclick = async (e) => {
   StartJarvis(input.value);
   input.value = "";
 };
+
+const dropdownBtn = document.getElementById("dropdownBtn");
+const dropdownMenu = document.getElementById("dropdownMenu");
+const dropdownItems = document.querySelectorAll(".dropdown-item");
+
+dropdownBtn.addEventListener("click", function (e) {
+  e.stopPropagation();
+  
+  dropdownMenu.classList.toggle("show");
+  dropdownBtn.classList.toggle("active");
+});
+
+dropdownItems.forEach((item) => {
+  item.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Remove previous selection
+    dropdownItems.forEach((i) => i.classList.remove("selected"));
+
+    // Add selection to current item
+    this.classList.add("selected");
+
+    // Get selected item details
+    const selectedText = this.querySelector("span").textContent;
+    const selectedClass = this.classList[1]; // Get platform class
+
+    // Update button icon background
+    const buttonIconWrapper = dropdownBtn.querySelector(
+      ".dropdown-button-icon"
+    );
+    buttonIconWrapper.className = `dropdown-button-icon ${selectedClass}`;
+
+    // Close dropdown
+    dropdownMenu.classList.remove("show");
+    dropdownBtn.classList.remove("active");
+
+    // Add selection feedback
+    this.style.transform = "scale(0.95)";
+    setTimeout(() => {
+      this.style.transform = "";
+    }, 150);
+
+    console.log("Selected:", selectedText);
+  });
+});
+
+// Close dropdown when clicking outside
+document.addEventListener("click", function () {
+  dropdownMenu.classList.remove("show");
+  dropdownBtn.classList.remove("active");
+});
+
+// Prevent dropdown from closing when clicking inside
+dropdownMenu.addEventListener("click", function (e) {
+  e.stopPropagation();
+});
+
+// Handle keyboard navigation
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape") {
+    dropdownMenu.classList.remove("show");
+    dropdownBtn.classList.remove("active");
+  }
+});
+
+// Add enhanced touch support for mobile
+let touchStartY = 0;
+let touchEndY = 0;
+let isScrolling = false;
+
+dropdownMenu.addEventListener("touchstart", function (e) {
+  touchStartY = e.changedTouches[0].screenY;
+  isScrolling = false;
+});
+
+dropdownMenu.addEventListener("touchmove", function (e) {
+  if (!isScrolling) {
+    touchEndY = e.changedTouches[0].screenY;
+    if (Math.abs(touchEndY - touchStartY) > 10) {
+      isScrolling = true;
+    }
+  }
+});
+
+dropdownMenu.addEventListener("touchend", function (e) {
+  if (!isScrolling) {
+    e.preventDefault();
+  }
+});
+
