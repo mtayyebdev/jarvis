@@ -26,9 +26,9 @@ setInterval(() => {
   });
 }, 1000);
 
-// window.addEventListener("DOMContentLoaded", () => {
-//   speakText("Welcome M Tayyeb, How can i help you?");
-// });
+window.addEventListener("DOMContentLoaded", () => {
+  speakText("Welcome M Tayyeb, How can i help you?");
+});
 
 // converting array or string..........................
 function arrayToParagraph(arr) {
