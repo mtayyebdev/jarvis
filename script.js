@@ -26,9 +26,14 @@ setInterval(() => {
   });
 }, 1000);
 
-// window.addEventListener("DOMContentLoaded", () => {
-//   speakText("Welcome M Tayyeb, How can i help you?");
-// });
+window.addEventListener("DOMContentLoaded", () => {
+  const utterance = new SpeechSynthesisUtterance(
+    "Welcome M Tayyeb, How can i help you?"
+  );
+  utterance.rate = 1.3;
+  utterance.pitch=1.5;
+  window.speechSynthesis.speak(utterance);
+});
 
 // converting array or string..........................
 function arrayToParagraph(arr) {
