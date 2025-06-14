@@ -95,7 +95,6 @@ function startVoiceHandler() {
 
   recognition.onend = function () {
     startVoice.src = "./images/307c73143a955f1e0bf26a41b98a035c_w200.webp";
-    recognition.start();
   };
 
   recognition.onerror = function (event) {
