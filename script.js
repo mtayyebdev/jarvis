@@ -27,12 +27,10 @@ setInterval(() => {
 }, 1000);
 
 window.addEventListener("DOMContentLoaded", () => {
-  const utterance = new SpeechSynthesisUtterance(
-    "Welcome M Tayyeb, How can i help you?"
-  );
-  utterance.rate = 1.3;
-  utterance.pitch=1.5;
-  window.speechSynthesis.speak(utterance);
+  speakText("Welcome Mr Tayyeb, How can i help you?");
+  setTimeout(() => {
+    startVoiceHandler();
+  }, 2000);
 });
 
 // converting array or string..........................
@@ -57,9 +55,14 @@ function speakText(text) {
 }
 
 startVoice.onclick = () => {
+  startVoiceHandler();
+};
+
+function startVoiceHandler() {
   let recognition = new (window.SpeechRecognition ||
     window.webkitSpeechRecognition)();
   recognition.lang = "en-US";
+  // recognition.continuous = true; // keeps running
   recognition.interimResults = false;
 
   recognition.onstart = function () {
@@ -69,14 +72,22 @@ startVoice.onclick = () => {
   recognition.onresult = function (event) {
     let text = event.results[0][0].transcript;
     text = text.toLowerCase();
-    if (text.includes("search") || text.includes("jarvis search")) {
+    if (text.startsWith("search for") || text.startsWith("jarvis search for")) {
       speakText("Searching for");
-      if (text.includes("jarvis search")) {
+      if (text.startsWith("jarvis search for")) {
+        text = text.replace("jarvis search for", "");
+      } else {
+        text = text.replace("search for", "");
+      }
+      window.open(`https://google.com/search?q=${text}`);
+    } else if (text.startsWith("search") || text.startsWith("jarvis search")) {
+      speakText("Searching for");
+      if (text.startsWith("jarvis search")) {
         text = text.replace("jarvis search", "");
       } else {
         text = text.replace("search", "");
       }
-      window.open(`https://google.com/search?q=${text}`);
+      window.open(`https://www.youtube.com/results?search_query=${text}`);
     } else {
       StartJarvis(text);
     }
@@ -84,6 +95,7 @@ startVoice.onclick = () => {
 
   recognition.onend = function () {
     startVoice.src = "./images/307c73143a955f1e0bf26a41b98a035c_w200.webp";
+    recognition.start();
   };
 
   recognition.onerror = function (event) {
@@ -91,7 +103,7 @@ startVoice.onclick = () => {
   };
 
   recognition.start();
-};
+}
 
 async function StartJarvis(value) {
   let md = window.markdownit();
