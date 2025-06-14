@@ -141,21 +141,17 @@ body {
   cursor: pointer;
 }
 
-/* .dots {
-  background: white;
-  position: absolute;
-  top: 0px;
-  right: 46%;
-  border-radius: 10px;
+#search_selector{
+  background-color: white;
   color: black;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 14px;
+  font-size: 18px;
+  border: none;
+  outline: none;
+  padding: 10px 10px;
 }
-.dots:hover {
-  background: rgb(243, 241, 241);
-} */
 
+
+/* dropdown css start............................................ */
 .dropdown-button {
   background: rgba(255, 255, 255, 0.95);
   border: none;

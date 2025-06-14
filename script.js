@@ -5,6 +5,7 @@ const API_KEY = "AIzaSyAbtRVQySzE1adASkDktpBxDd5zzWI5k5M"; // jarvis api........
 const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
 const input = document.getElementById("inputBox");
+const selectorBox = document.getElementById("search_selector");
 const output = document.getElementById("output");
 const submit = document.getElementById("submit");
 const startVoice = document.getElementById("startVoice");
@@ -24,6 +25,10 @@ setInterval(() => {
     battery_div.innerHTML = `${res.level * 100}%`;
   });
 }, 1000);
+
+// window.addEventListener("DOMContentLoaded", () => {
+//   speakText("Welcome M Tayyeb, How can i help you?");
+// });
 
 // converting array or string..........................
 function arrayToParagraph(arr) {
@@ -59,15 +64,14 @@ startVoice.onclick = () => {
   recognition.onresult = function (event) {
     let text = event.results[0][0].transcript;
     text = text.toLowerCase();
-    if (text.includes("open facebook")) {
-      speakText("opening facebook");
-      window.open("https://facebook.com");
-    } else if (text.includes("open youtube")) {
-      speakText("opening youtube");
-      window.open("https://youtube.com");
-    } else if (text.includes("open whatsapp")) {
-      speakText("opening whatsapp");
-      window.open("https://web.whatsapp.com/#");
+    if (text.includes("search") || text.includes("jarvis search")) {
+      speakText("Searching for");
+      if (text.includes("jarvis search")) {
+        text = text.replace("jarvis search", "");
+      } else {
+        text = text.replace("search", "");
+      }
+      window.open(`https://google.com/search?q=${text}`);
     } else {
       StartJarvis(text);
     }
@@ -145,58 +149,68 @@ async function StartJarvis(value) {
   }
 }
 
+// input box handling logic........................
+input.addEventListener("keypress", (e) => {
+  if (e.key == "Enter") {
+    if (!input.value.trim()) {
+      output.innerHTML = "⚠️ Please enter a prompt!";
+      return;
+    }
+    if (selectorBox.value == "AI") {
+      StartJarvis(input.value);
+    } else {
+      speakText("Searching for");
+      window.open(`https://google.com/search?q=${input.value}`);
+    }
+    input.value = "";
+  }
+});
+
 submit.onclick = async (e) => {
   if (!input.value.trim()) {
     output.innerHTML = "⚠️ Please enter a prompt!";
     return;
   }
-  StartJarvis(input.value);
+  if (selectorBox.value == "AI") {
+    StartJarvis(input.value);
+  } else {
+    speakText("Searching for");
+    window.open(`https://google.com/search?q=${input.value}`);
+  }
   input.value = "";
 };
 
+// dropdown logic............................................
 const dropdownBtn = document.getElementById("dropdownBtn");
 const dropdownMenu = document.getElementById("dropdownMenu");
 const dropdownItems = document.querySelectorAll(".dropdown-item");
 
 dropdownBtn.addEventListener("click", function (e) {
   e.stopPropagation();
-  
+
   dropdownMenu.classList.toggle("show");
   dropdownBtn.classList.toggle("active");
 });
 
 dropdownItems.forEach((item) => {
   item.addEventListener("click", function (e) {
-    e.preventDefault();
     e.stopPropagation();
-
-    // Remove previous selection
     dropdownItems.forEach((i) => i.classList.remove("selected"));
-
-    // Add selection to current item
     this.classList.add("selected");
+    const selectedClass = this.classList[1];
 
-    // Get selected item details
-    const selectedText = this.querySelector("span").textContent;
-    const selectedClass = this.classList[1]; // Get platform class
-
-    // Update button icon background
     const buttonIconWrapper = dropdownBtn.querySelector(
       ".dropdown-button-icon"
     );
     buttonIconWrapper.className = `dropdown-button-icon ${selectedClass}`;
 
-    // Close dropdown
     dropdownMenu.classList.remove("show");
     dropdownBtn.classList.remove("active");
 
-    // Add selection feedback
     this.style.transform = "scale(0.95)";
     setTimeout(() => {
       this.style.transform = "";
     }, 150);
-
-    console.log("Selected:", selectedText);
   });
 });
 
@@ -218,29 +232,3 @@ document.addEventListener("keydown", function (e) {
     dropdownBtn.classList.remove("active");
   }
 });
-
-// Add enhanced touch support for mobile
-let touchStartY = 0;
-let touchEndY = 0;
-let isScrolling = false;
-
-dropdownMenu.addEventListener("touchstart", function (e) {
-  touchStartY = e.changedTouches[0].screenY;
-  isScrolling = false;
-});
-
-dropdownMenu.addEventListener("touchmove", function (e) {
-  if (!isScrolling) {
-    touchEndY = e.changedTouches[0].screenY;
-    if (Math.abs(touchEndY - touchStartY) > 10) {
-      isScrolling = true;
-    }
-  }
-});
-
-dropdownMenu.addEventListener("touchend", function (e) {
-  if (!isScrolling) {
-    e.preventDefault();
-  }
-});
-
