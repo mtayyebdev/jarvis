@@ -102,7 +102,7 @@ function speakText(text) {
     },
     onend: () => {
       jarvis_speaking_img.style.display = "none";
-      recognition.start();
+      startVoiceHandler();
     },
   });
 }
