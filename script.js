@@ -71,14 +71,16 @@
 //       });
 //   }
 // }
-// function welcome() {
-//   speakText("Welcome Mr Tayyeb, How can I help you?");
-//   setTimeout(() => {
-//     startVoiceHandler();
-//   }, 2000);
-// }
-// getWeather();
-// welcome();
+// window.addEventListener(
+//   "click",
+//   () => {
+//     speakText("Welcome Mr Tayyeb, How can I help you?");
+//     setTimeout(() => {
+//       startVoiceHandler();
+//     }, 2000);
+//   },
+//   { once: true }
+// );
 
 // // converting array or string..........................
 // function arrayToParagraph(arr) {
@@ -98,11 +100,10 @@
 //     rate: 1,
 //     onstart: () => {
 //       jarvis_speaking_img.style.display = "block";
-//       recognition.abort();
+//       recognition?.stop();
 //     },
 //     onend: () => {
 //       jarvis_speaking_img.style.display = "none";
-//       startVoiceHandler();
 //     },
 //   });
 // }
@@ -130,7 +131,7 @@
 
 //   recognition.onerror = function (event) {
 //     console.log("Error in main recognition:", event.error);
-//     recognition.start(); // 🔁 Even on error, restart
+//     // recognition.start(); // 🔁 Even on error, restart
 //   };
 
 //   recognition.start();
@@ -309,33 +310,13 @@
 //   }
 // });
 
-/*
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-*/
+// getWeather();
 
 import { chatHistory, userData } from "./user_data.js";
+
 const API_KEY = "AIzaSyAbtRVQySzE1adASkDktpBxDd5zzWI5k5M";
 const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
-// UI Elements
 const input = document.getElementById("inputBox");
 const selectorBox = document.getElementById("search_selector");
 const output = document.getElementById("output");
@@ -346,62 +327,54 @@ const time_div = document.getElementById("time");
 const online_div = document.getElementById("online");
 const battery_div = document.getElementById("battery");
 const date_div = document.getElementById("date");
+
 let recognition;
 
-// ========== Time & Battery ================
 setInterval(() => {
   const now = new Date();
-  time_div.textContent = now.toLocaleTimeString();
-  date_div.textContent = now.toLocaleDateString();
-  online_div.textContent = navigator.onLine ? "🟢 Online" : "🔴 Offline";
+  time_div.innerHTML = now.toLocaleTimeString();
+  date_div.innerHTML = now.toLocaleDateString();
+  online_div.innerHTML = window.navigator.onLine ? "🟢 Online" : "🔴 Offline";
 
-  navigator.getBattery().then((res) => {
-    battery_div.textContent = `${(res.level * 100).toFixed(0)}%`;
+  navigator.getBattery().then((battery) => {
+    battery_div.innerHTML = `${Math.round(battery.level * 100)}%`;
   });
 }, 1000);
 
-// ========== Weather ===============
 function getWeather() {
   const apiKey = "CnqVZ8jtTAOpzh3uaCH6fGdc5k34G8QZ";
-  navigator.geolocation.getCurrentPosition(success, error);
 
-  function success(position) {
-    const lat = position.coords.latitude;
-    const lon = position.coords.longitude;
-    fetch(
-      `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${apiKey}&q=${lat},${lon}`
-    )
-      .then((res) => res.json())
-      .then((data) => getFullWeather(data.Key, data.LocalizedName));
-  }
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
+      fetch(
+        `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${apiKey}&q=${latitude},${longitude}`
+      )
+        .then((res) => res.json())
+        .then((locationData) => {
+          const locationKey = locationData.Key;
+          const cityName = locationData.LocalizedName;
 
-  function error() {
-    console.log("Location access denied.");
-  }
-
-  function getFullWeather(locationKey, cityName) {
-    fetch(
-      `https://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${apiKey}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const { WeatherText, Temperature } = data[0];
-        document.getElementById("weather").innerHTML = `
-          <h3>Weather in ${cityName}:</h3>
-          <h4 style="margin-top:-10px;">${WeatherText}, ${Temperature.Metric.Value}°C</h4>`;
-      });
-  }
+          fetch(
+            `https://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${apiKey}`
+          )
+            .then((res) => res.json())
+            .then((data) => {
+              const weatherText = data[0].WeatherText;
+              const temp = data[0].Temperature.Metric.Value;
+              document.getElementById("weather").innerHTML = `
+                <h3>Weather in ${cityName}:</h3>
+                <h4 style="margin-top:-10px;">${weatherText}, ${temp}°C</h4>`;
+            });
+        });
+    },
+    () => console.log("Geolocation permission denied.")
+  );
 }
 
-// ========== Welcome Message ===============
-function welcome() {
-  speakText("Welcome Mr Tayyeb, How can I help you?");
-  setTimeout(startVoiceHandler, 2000);
-}
-
-// ========== Text to Speech ===============
-function arrayToParagraph(arr) {
-  return (Array.isArray(arr) ? arr.join(" ") : arr)
+function arrayToParagraph(text) {
+  if (Array.isArray(text)) text = text.join(" ");
+  return text
     .replace(/<\/?[^>]+(>|$)/g, "")
     .replace(/\n/g, " ")
     .trim();
@@ -409,134 +382,146 @@ function arrayToParagraph(arr) {
 
 function speakText(text) {
   const newText = arrayToParagraph(text);
+
+  // Stop recognition before speaking
+  if (recognition) {
+    try {
+      recognition.onend = null; // prevent auto-restart
+      recognition.stop();
+    } catch (err) {
+      console.warn("Recognition stop failed:", err);
+    }
+  }
+
   responsiveVoice.speak(newText, "Hindi Male", {
     pitch: 1,
     rate: 1,
     onstart: () => {
       jarvis_speaking_img.style.display = "block";
-      recognition?.stop();
     },
     onend: () => {
       jarvis_speaking_img.style.display = "none";
+      // Resume recognition after speaking ends
       startVoiceHandler();
     },
   });
 }
 
-// ========== Voice Input Setup ===============
-function createSpeechRecognition() {
-  const recog = new (window.SpeechRecognition ||
+function startVoiceHandler() {
+  recognition = new (window.SpeechRecognition ||
     window.webkitSpeechRecognition)();
-  recog.lang = "en-US";
-  recog.interimResults = false;
+  recognition.lang = "en-US";
+  recognition.interimResults = false;
 
-  recog.onresult = (event) => {
+  recognition.onresult = (event) => {
     const text = event.results[0][0].transcript.toLowerCase();
     JarvisCommands(text);
   };
 
-  recog.onend = () => recog.start();
-  recog.onerror = () => recog.start();
+  recognition.onend = () => recognition.start();
+  recognition.onerror = () => recognition.start();
 
-  return recog;
-}
-
-function startVoiceHandler() {
-  recognition = createSpeechRecognition();
   recognition.start();
 }
 
-// ========== Command Handler ===============
 function JarvisCommands(text) {
   if (text.startsWith("search for") || text.startsWith("jarvis search for")) {
-    handleSearch(text, "google");
+    speakText("Searching for");
+    const query = text.replace(/^(jarvis )?search for/, "").trim();
+    window.open(`https://google.com/search?q=${query}`);
   } else if (text.startsWith("search") || text.startsWith("jarvis search")) {
-    handleSearch(text, "youtube");
+    speakText("Searching on YouTube");
+    const query = text.replace(/^(jarvis )?search/, "").trim();
+    window.open(`https://www.youtube.com/results?search_query=${query}`);
   } else {
     StartJarvis(text);
   }
 }
 
-function handleSearch(text, platform) {
-  speakText("Searching for");
-  const cleaned = text.replace(/jarvis|search for|search/gi, "").trim();
-  const url =
-    platform === "google"
-      ? `https://google.com/search?q=${cleaned}`
-      : `https://youtube.com/results?search_query=${cleaned}`;
-  window.open(url, "_blank");
-}
-
-// ========== AI Chat ==================
-async function StartJarvis(prompt) {
+async function StartJarvis(promptText) {
   const md = window.markdownit();
-  const content = `
-    About You:
-      Name: ${userData[0]["assistant Name"]}
-      More: ${userData[0]["about assistant"]}
+  const data = {
+    contents: [
+      {
+        parts: [
+          {
+            text: `
+            About You:
+              Name: ${userData[0]["assistant Name"]}
+              More: ${userData[0]["about assistant"]}
 
-    About Me:
-      Name: ${userData[0]["user"]}
-      Age: ${userData[0]["user age"]}
-      Skills: ${userData[0]["user skills"]}
-      Friends: ${userData[0]["user friends"]}
-      Education: ${userData[0]["user education"]}
-      Address: ${userData[0]["user address"]}
+            About Me:
+              Name: ${userData[0]["user"]}
+              Age: ${userData[0]["user age"]}
+              Skills: ${userData[0]["user skills"]}
+              Friends: ${userData[0]["user friends"]}
+              Education: ${userData[0]["user education"]}
+              Address: ${userData[0]["user address"]}
 
-    Chat History:
-    ${chatHistory
-      .map((chat) => `User: ${chat.user}\nJarvis: ${chat.jarvis}`)
-      .join("\n")}
+            Chat History:\n${chatHistory
+              .map((chat) => `User: ${chat.user}\nJarvis: ${chat.jarvis}`)
+              .join("\n")}
 
-    Prompt: ${prompt}
-  `;
+            Prompt: ${promptText}
+            `,
+          },
+        ],
+      },
+    ],
+  };
 
   try {
-    const res = await fetch(url, {
+    const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contents: [{ parts: [{ text: content }] }] }),
+      body: JSON.stringify(data),
     });
 
-    const result = await res.json();
-    const reply = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+    const result = await response.json();
 
-    if (reply) {
-      const html = md.render(reply);
-      output.innerHTML = html;
-      chatHistory.push({ user: prompt, jarvis: arrayToParagraph(html) });
-      speakText(reply);
+    if (result.candidates?.length > 0) {
+      const text = result.candidates[0].content.parts[0].text;
+      const htmlOutput = md.render(text);
+      output.innerHTML = htmlOutput;
+      chatHistory.push({ user: promptText, jarvis: arrayToParagraph(text) });
+      speakText(text);
     } else {
       output.innerHTML = "⚠️ No response received.";
-      speakText("No response received.");
+      speakText("No response received. Try again!");
     }
-  } catch {
-    output.innerHTML = "⚠️ Error! Check internet or API key.";
+  } catch (err) {
+    console.error("API Error:", err);
+    output.innerHTML =
+      "⚠️ API request failed. Please check your key or internet.";
   }
 }
 
-// ========== Input Handling (Submit & Enter) ===============
-function handleInputSubmit() {
-  const value = input.value.trim();
-  if (!value) return (output.innerHTML = "⚠️ Please enter a prompt!");
-
-  if (selectorBox.value === "AI") {
-    StartJarvis(value);
-  } else {
-    handleSearch(value, "google");
-  }
-  input.value = "";
-}
-
+// Input event handling
+[input, submit].forEach((el) =>
+  el.addEventListener("click", handleInputSubmit)
+);
 input.addEventListener("keypress", (e) => {
   if (e.key === "Enter") handleInputSubmit();
 });
-submit.addEventListener("click", handleInputSubmit);
 
-// ========== Voice Activation ===============
-startVoice.onclick = () => startVoiceHandler();
+function handleInputSubmit() {
+  const val = input.value.trim();
+  if (!val) {
+    output.innerHTML = "⚠️ Please enter a prompt!";
+    return;
+  }
 
-// ========== Dropdown Menu UI ===============
+  if (selectorBox.value === "AI") {
+    StartJarvis(val);
+  } else {
+    speakText("Searching for");
+    window.open(`https://google.com/search?q=${val}`);
+  }
+
+  input.value = "";
+}
+
+// Dropdown Logic
 const dropdownBtn = document.getElementById("dropdownBtn");
 const dropdownMenu = document.getElementById("dropdownMenu");
 const dropdownItems = document.querySelectorAll(".dropdown-item");
@@ -547,35 +532,48 @@ dropdownBtn.addEventListener("click", (e) => {
   dropdownBtn.classList.toggle("active");
 });
 
-dropdownItems.forEach((item) => {
-  item.addEventListener("click", function (e) {
+dropdownItems.forEach((item) =>
+  item.addEventListener("click", (e) => {
     e.stopPropagation();
     dropdownItems.forEach((i) => i.classList.remove("selected"));
-    this.classList.add("selected");
+    item.classList.add("selected");
 
+    const selectedClass = item.classList[1];
     dropdownBtn.querySelector(
       ".dropdown-button-icon"
-    ).className = `dropdown-button-icon ${this.classList[1]}`;
+    ).className = `dropdown-button-icon ${selectedClass}`;
 
     dropdownMenu.classList.remove("show");
     dropdownBtn.classList.remove("active");
-    this.style.transform = "scale(0.95)";
-    setTimeout(() => (this.style.transform = ""), 150);
-  });
-});
+  })
+);
 
 document.addEventListener("click", () => {
   dropdownMenu.classList.remove("show");
   dropdownBtn.classList.remove("active");
 });
+
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     dropdownMenu.classList.remove("show");
     dropdownBtn.classList.remove("active");
   }
 });
+
 dropdownMenu.addEventListener("click", (e) => e.stopPropagation());
 
-// ========== Init ===========
-getWeather();
-welcome();
+// 🟢 Trigger Jarvis welcome after user interaction
+document.addEventListener(
+  "click",
+  () => {
+    if (!window.__jarvisStarted) {
+      getWeather();
+      speakText("Welcome Mr Tayyeb, how can I help you?");
+      startVoiceHandler();
+      window.__jarvisStarted = true;
+    }
+  },
+  { once: true }
+);
+
+startVoice.onclick = startVoiceHandler;
