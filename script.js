@@ -98,11 +98,11 @@ function speakText(text) {
     rate: 1,
     onstart: () => {
       jarvis_speaking_img.style.display = "block";
-      recognition.abort();
+      recognition.stop();
     },
     onend: () => {
       jarvis_speaking_img.style.display = "none";
-      startVoiceHandler();
+      recognition.start();
     },
   });
 }
