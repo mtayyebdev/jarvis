@@ -56,6 +56,12 @@ body {
   align-items: center;
   gap: 10px;
 }
+#weather{
+  margin-top: 5px;
+  display: flex;
+  align-items: start;
+  flex-direction: column;
+}
 
 .output {
   margin-top: -40px;

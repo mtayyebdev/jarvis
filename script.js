@@ -14,6 +14,7 @@ let time_div = document.getElementById("time");
 let online_div = document.getElementById("online");
 let battery_div = document.getElementById("battery");
 let date_div = document.getElementById("date");
+let recognition;
 
 setInterval(() => {
   time_div.innerHTML = new Date().toLocaleString().split(",")[1];
@@ -26,12 +27,58 @@ setInterval(() => {
   });
 }, 1000);
 
-window.addEventListener("DOMContentLoaded", () => {
-  speakText("Welcome Mr Tayyeb, How can i help you?");
+function getWeather() {
+  const apiKey = "CnqVZ8jtTAOpzh3uaCH6fGdc5k34G8QZ";
+  navigator.geolocation.getCurrentPosition(success, error);
+
+  function success(position) {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+
+    fetch(
+      `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${apiKey}&q=${lat},${lon}`
+    )
+      .then((res) => res.json())
+      .then((locationData) => {
+        const locationKey = locationData.Key;
+        const cityName = locationData.LocalizedName;
+        getFullWeather(locationKey, cityName);
+      })
+      .catch(() => {
+        console.log("Could not get your location from AccuWeather.");
+      });
+  }
+
+  function error() {
+    console.log("Location access denied or failed.");
+  }
+
+  function getFullWeather(locationKey, cityName) {
+    fetch(
+      `https://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${apiKey}`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        const weatherText = data[0].WeatherText;
+        const temperature = data[0].Temperature.Metric.Value;
+        document.getElementById(
+          "weather"
+        ).innerHTML = `<h3>Weather in ${cityName}:</h3>
+                      <h4 style="margin-top:-10px;"> ${weatherText}, ${temperature}°C</h4>`;
+      })
+      .catch(() => {
+        console.log("Could not load weather data.");
+      });
+  }
+}
+function welcome() {
+  speakText("Welcome Mr Tayyeb, How can I help you?");
   setTimeout(() => {
     startVoiceHandler();
   }, 2000);
-});
+}
+getWeather();
+welcome();
 
 // converting array or string..........................
 function arrayToParagraph(arr) {
@@ -49,8 +96,14 @@ function speakText(text) {
   responsiveVoice.speak(newText, "Hindi Male", {
     pitch: 1,
     rate: 1,
-    onstart: () => (jarvis_speaking_img.style.display = "block"),
-    onend: () => (jarvis_speaking_img.style.display = "none"),
+    onstart: () => {
+      jarvis_speaking_img.style.display = "block";
+      recognition.abort();
+    },
+    onend: () => {
+      jarvis_speaking_img.style.display = "none";
+      startVoiceHandler();
+    },
   });
 }
 
@@ -59,50 +112,56 @@ startVoice.onclick = () => {
 };
 
 function startVoiceHandler() {
-  let recognition = new (window.SpeechRecognition ||
+  recognition = new (window.SpeechRecognition ||
     window.webkitSpeechRecognition)();
   recognition.lang = "en-US";
-  // recognition.continuous = true; // keeps running
   recognition.interimResults = false;
 
-  recognition.onstart = function () {
-    startVoice.src = "./images/start_voice.png";
-  };
-
   recognition.onresult = function (event) {
-    let text = event.results[0][0].transcript;
-    text = text.toLowerCase();
-    if (text.startsWith("search for") || text.startsWith("jarvis search for")) {
-      speakText("Searching for");
-      if (text.startsWith("jarvis search for")) {
-        text = text.replace("jarvis search for", "");
-      } else {
-        text = text.replace("search for", "");
-      }
-      window.open(`https://google.com/search?q=${text}`);
-    } else if (text.startsWith("search") || text.startsWith("jarvis search")) {
-      speakText("Searching for");
-      if (text.startsWith("jarvis search")) {
-        text = text.replace("jarvis search", "");
-      } else {
-        text = text.replace("search", "");
-      }
-      window.open(`https://www.youtube.com/results?search_query=${text}`);
-    } else {
-      StartJarvis(text);
-    }
+    let newtext = event.results[0][0].transcript;
+    newtext = newtext.toLowerCase();
+    JarvisCommands(newtext);
   };
 
   recognition.onend = function () {
-    startVoice.src = "./images/307c73143a955f1e0bf26a41b98a035c_w200.webp";
+    console.log("Recognition ended. Restarting...");
     recognition.start();
   };
 
   recognition.onerror = function (event) {
-    console.log("Error:", event.error);
+    console.log("Error in main recognition:", event.error);
+    recognition.start(); // 🔁 Even on error, restart
   };
 
   recognition.start();
+}
+
+function JarvisCommands(newtext) {
+  if (
+    newtext.startsWith("search for") ||
+    newtext.startsWith("jarvis search for")
+  ) {
+    speakText("Searching for");
+    if (newtext.startsWith("jarvis search for")) {
+      newtext = newtext.replace("jarvis search for", "");
+    } else {
+      newtext = newtext.replace("search for", "");
+    }
+    window.open(`https://google.com/search?q=${newtext}`);
+  } else if (
+    newtext.startsWith("search") ||
+    newtext.startsWith("jarvis search")
+  ) {
+    speakText("Searching for");
+    if (newtext.startsWith("jarvis search")) {
+      newtext = newtext.replace("jarvis search", "");
+    } else {
+      newtext = newtext.replace("search", "");
+    }
+    window.open(`https://www.youtube.com/results?search_query=${newtext}`);
+  } else {
+    StartJarvis(newtext);
+  }
 }
 
 async function StartJarvis(value) {
