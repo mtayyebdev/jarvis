@@ -124,8 +124,12 @@ function startVoiceHandler() {
   };
 
   recognition.onend = function () {
+<<<<<<< HEAD
     console.log("Recognition ended. Restarting...");
     recognition.start();
+=======
+    startVoice.src = "./images/307c73143a955f1e0bf26a41b98a035c_w200.webp";
+>>>>>>> 01b81bd3fba30571842fe74600177ec31e13d054
   };
 
   recognition.onerror = function (event) {
