@@ -567,7 +567,6 @@ document.addEventListener(
   "click",
   () => {
     if (!window.__jarvisStarted) {
-      getWeather();
       speakText("Welcome Mr Tayyeb, how can I help you?");
       startVoiceHandler();
       window.__jarvisStarted = true;
@@ -576,4 +575,5 @@ document.addEventListener(
   { once: true }
 );
 
+getWeather();
 startVoice.onclick = startVoiceHandler;
